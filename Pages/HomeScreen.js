@@ -17,7 +17,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 /*
-   The Functional Component LogoutModal is used to present the option that a user can avail if he/she intends to do so.
+   The Functional Component - LogoutModal - is used to present the option that a user can avail if he/she intends to
+   logout or login to a different account.
  */
 function LogoutModal(props) {
     let { isVisible, logoutPayload } = props;
@@ -137,6 +138,10 @@ function LogoutModal(props) {
   );
 }
 
+/*
+    The functional component - FacebookPageSelectionDialog - is used to present users with the pages that they may want
+    to manage.
+ */
 function FacebookPageSelectionDialog(props) {
   let {PageList} = props;
   let mapForPagesList = PageList.map((value, key) => {
@@ -162,20 +167,37 @@ function FacebookPageSelectionDialog(props) {
 }
 
 function HomeScreen(props) {
-    const EMPTY_LOGOUT_PAYLOAD = {}
+  const EMPTY_LOGOUT_PAYLOAD = {}
+
+  // The following variables keep track of social media user state
   const [FacebookLogin, setFacebookState] = useState('');
   const [LinkedLogin, setLinkedinState] = useState('');
   const [TwitterLogin, setTwitterState] = useState('');
   const [TwitterKey, setTwitterKeyState] = useState('');
-  const [EnablePost, setEnablePostState] = useState(false);
-  const [PageList, setPageList] = useState([]);
-  const [LogoutPayload, setLogoutPayload] = useState(EMPTY_LOGOUT_PAYLOAD);
-  const [LogoutModalVisible, setLogoutModalVisible] = useState(false);
-    const [facebookLoginEnabled, setFacebookLoginEnable] = useState(true);
-  useEffect(() => {
-    setEnablePostState(FacebookLogin || TwitterLogin || LinkedLogin);
-  }, [FacebookLogin, LinkedLogin, TwitterLogin]);
 
+  // Facebook Page List state variable
+  const [PageList, setPageList] = useState([]);
+
+  // State contains functions to manage user for social media platform
+    /*
+        The state variable - LogoutPayload - is used to pass down payload from TwitterLogin and
+        LinkedinLoginScreenComponent
+
+        The payload is then passed on to LogoutModal component to provide following actions
+            - Remove account
+            - Edit Account
+    */
+  const [LogoutPayload, setLogoutPayload] = useState(EMPTY_LOGOUT_PAYLOAD);
+
+  // The variable manages the sate of LogoutModal Component
+  const [LogoutModalVisible, setLogoutModalVisible] = useState(false);
+
+  /*
+    The state variable is used to disable the FacebookLoginButton for the time AccessToken is fetched after login
+  */
+  const [facebookLoginEnabled, setFacebookLoginEnable] = useState(true);
+
+  // The Hook loads Login Status for all the social media platforms
   useEffect(() => {
     (async () => {
       setFacebookState(await AsyncStorage.getItem('facebookAccessToken'));
@@ -185,8 +207,9 @@ function HomeScreen(props) {
     })();
   }, []);
 
-  let handleLogin = async () => {
-      if (FacebookLogin) return;
+  // Handles facebook login Action
+  let handleFacebookLogin = async () => {
+    if (FacebookLogin) return;
     let result = await LoginManager.logInWithPermissions([
       'email',
       'publish_pages',
@@ -201,7 +224,7 @@ function HomeScreen(props) {
         .get(
           `https://graph.facebook.com/v6.0/me/accounts?access_token=${token.accessToken.toString()}`,
         )
-        .catch(err => alert('Error fetching data. ->' + err + ' |'));
+        .catch(err => Alert.alert('Error fetching data. ->' + err + ' |'));
       let PageListR = [];
       PageListR.push({
         name: 'Use as self',
@@ -216,12 +239,15 @@ function HomeScreen(props) {
       setPageList(PageListR);
     }
   };
-  let handleLogout = () => {
+  // Handles facebook logout action
+  let handleFacebookLogout = () => {
     LoginManager.logOut();
     setFacebookState('');
     AsyncStorage.setItem('facebookAccessToken', '');
   };
-  let _handleImageAdd = async () => {
+
+  // Handles Add Image action button
+  let _handleAddImageButton = async () => {
     try {
       let Images = await ImagePicker.openPicker({
         multiple: true,
@@ -251,7 +277,7 @@ function HomeScreen(props) {
         flex: 1,
         backgroundColor: 'white',
       }}>
-      {/* Login panels */}
+      {/* Facebook Page Selection Dialog */}
       {PageList.length > 0 ? (
         <FacebookPageSelectionDialog
           PageList={PageList}
@@ -259,7 +285,7 @@ function HomeScreen(props) {
           setState={setFacebookState}
         />
       ) : null}
-      {/* Logout screen */}
+      {/* Logout Component */}
         <LogoutModal isVisible={LogoutModalVisible} logoutPayload={LogoutPayload}/>
       <View
         style={{
@@ -311,18 +337,18 @@ function HomeScreen(props) {
                       removeAccount: () => {
                           setLogoutModalVisible(false);
                           setLogoutPayload({});
-                          handleLogout();
+                          handleFacebookLogout();
                       },
                       editDetails: () => {
                           setLogoutModalVisible(false);
                           setLogoutPayload({});
-                          handleLogout();
-                          handleLogin();
+                          handleFacebookLogout();
+                          handleFacebookLogin();
                       },
                   });
               } else {
                   setFacebookLoginEnable(false);
-                handleLogin();
+                  handleFacebookLogin();
                   setFacebookLoginEnable(true);
               }
             }}>
@@ -353,7 +379,7 @@ function HomeScreen(props) {
           alignItems: 'center',
         }}>
         <Button
-          onPress={_handleImageAdd}
+          onPress={_handleAddImageButton}
           disabled={!(FacebookLogin || TwitterLogin || LinkedLogin)}
           mode={'contained'}
           color={'#5859ED'}

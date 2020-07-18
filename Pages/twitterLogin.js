@@ -12,6 +12,11 @@ import {twitterCredentials} from './credentials'
 
 /*
  *  The component TwitterLoginScreen handles login to twitter account
+ * props:
+ *    - setLogoutVisible   : boolean   - Disable/Enable Login TouchOpacity while AccessToken is fetched
+ *    - setTwitterState    : string    - Sets token for HomeScreen Component
+ *    - setTwitterKeyStatus: string    - Sets Twitter Key for HomeScreen state
+ *    - setLogoutPayload   : Object    - Taken in close(), removeAccount(), editDetails() implementation
  */
 
 export default class TwitterLoginScreen extends Component {
@@ -19,14 +24,12 @@ export default class TwitterLoginScreen extends Component {
     isLoggedIn: false,
     authToken: '',
     authTokenSecret: '',
-    startup: '',
     twitterButtonEnable: true,
   };
   // Handles Login to Twitter Account
   _twitterSignIn = async () => {
     this.setState({twitterButtonEnable: false});
-    const {setLogoutVisible, setLogoutPayload, setTwitterStatus,
-      setTwitterKeyStatus } = this.props;
+    const {setTwitterStatus, setTwitterKeyStatus } = this.props;
       if (this.state.authToken)
         return;
     RNTwitterSignIn.init(
@@ -74,9 +77,7 @@ export default class TwitterLoginScreen extends Component {
   }
 
   render() {
-    const {isLoggedIn} = this.state;
-    const {setLogoutVisible, setLogoutPayload, setTwitterStatus,
-      setTwitterKeyStatus } = this.props;
+    const {setLogoutVisible, setLogoutPayload} = this.props;
     return (
         <TouchableOpacity
             disabled={!this.state.twitterButtonEnable}

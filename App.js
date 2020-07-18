@@ -4,14 +4,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {
   createStackNavigator,
 } from '@react-navigation/stack';
-import UploadsPage from './Pages/UploadsPage';
 
 // imports of screens
-
 import HomeScreen from './Pages/HomeScreen';
-import {LinkedinLoginScreen} from './Pages/linkedinLogin';
+import UploadsPage from './Pages/UploadsPage';
 
-var Stack = createStackNavigator();
+// Initializing a StackNavigation
+let Stack = createStackNavigator();
 
 // The component creates the stack navigation registry.
 class App extends React.Component {

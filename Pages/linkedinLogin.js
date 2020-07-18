@@ -30,6 +30,11 @@ const deviceDimensions = {
 
 /*
   The configuration for oauth to Linkedin Account.
+
+   linkedinCredentials Contains:
+    - clientId
+    - clientSecret
+    - redirect_uri
  */
 
 const config = {
@@ -38,7 +43,6 @@ const config = {
     'r_emailaddress,rw_organization_admin,r_liteprofile,w_member_social,w_organization_social,r_organization_social',
   response_type: 'code',
   state: 'SIGN_IN',
-  redirect_uri: 'YOUR_CALLBACK_URL',
 };
 
 
@@ -165,15 +169,34 @@ function DialogForORGID(props) {
   );
 }
 
+/*
+ *  The component LinkedinLoginScreen handles login to linkedin account
+ * props:
+ *    - setLogoutVisible   : boolean   - Disable/Enable Login TouchOpacity while AccessToken is fetched
+ *    - setLinkedinState   : string    - Sets token for HomeScreen Component
+ *    - setLogoutPayload   : Object    - Taken in close(), removeAccount(), editDetails() implementation
+ */
+
 export function LinkedinLoginScreen(props) {
+  // State variable to Enable/Disable Webview
   const [showLoginWebview, setWebviewState] = useState(false);
+
+  // State variable manages
   const [linkedinCode, setLinkedinCode] = useState('');
   const [linkedinAccessToken, setAccessToken] = useState('');
   const [linkedinExpiresIn, setExpiry] = useState('');
+
+  // State variable to store the URN value of the Organization/Self URN
   const [orgid, setOrgid] = useState('');
+  // State variables store the URN value for the authenticated user
   const [selfURN, setSelfURN] = useState('');
+
+  // Contains the Organization list that the authenticated user manages
   const [organizations, setOrganizations] = useState([]);
+
+  // Enable/Disable button while AccessToken is being fetched
   const [LinkedinButtonEnable, setLinkedinButtonEnable] = useState(true);
+
   const {setLogoutVisible, setLogoutPayload, setLinkedinStatus} = props;
 
   // Function handles navigation changes on webview

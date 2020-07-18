@@ -30,7 +30,8 @@
 * Pre-requisites:  
    - Android SDK  
    - Node 12+  
-   - Yarn  
+   - Yarn
+   - React Native - 0.61.5+
   
 * Directions to build  
 ```bash  

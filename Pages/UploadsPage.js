@@ -11,9 +11,8 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import ImageView from 'react-native-image-view';
-import {Chip, TextInput, Switch} from 'react-native-paper';
+import {TextInput, Switch} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
-import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import {StackActions} from '@react-navigation/native';
 import axios from 'axios';
@@ -27,7 +26,7 @@ var Dim = {
   height: Dimensions.get('window').height,
 };
 
-//  Fuctional component to present image cards
+//  Functional component to present image cards
 function ImageCard(props) {
   return (
     <View
@@ -90,7 +89,7 @@ function ImageCard(props) {
   );
 }
 
-// Function to remove duplicate tags
+//  Function to remove duplicate tags
 function RemoveDuplicates( tags ) {
   let newTaglist = [];
   tags.sort((a,b) => a.value < b.value ? -1: 1);
