@@ -31,7 +31,7 @@
     "react-native-image-crop-picker": "^0.30.0",
     "react-native-image-view": "^2.1.9",
     "react-native-paper": "^3.8.0",
-    "react-native-reanimated": "^1.8.0",
+    "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.4.0",
     "react-native-twitter-signin": "^1.1.1",
